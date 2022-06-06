@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { onMounted, reactive, ref } from 'vue';
 
-const url = 'https://88d3-38-25-15-22.sa.ngrok.io/proveedores';
+const url = 'https://cbde-38-25-15-22.sa.ngrok.io';
 
 const proveedores = ref([]);
 
@@ -20,19 +20,28 @@ onMounted(() => {
 });
 
 const getProveedores = () => {
-    axios.get(url)
+    axios.get(`${url}/proveedores`)
         .then(response => proveedores.value = response.data);
 };
 
 const handleRegistrarProveedor = () => {
-    axios.post(`${url}/newproveedor`, proveedorData).then(() => {
-        console.log(proveedorData);
-        getProveedores();
-    });
+    var data = new FormData();
+    data.append('nombre', proveedorData.nombre);
+    data.append('nombre_servicio', proveedorData.nombre_servicio);
+    data.append('categoria', proveedorData.categoria);
+    data.append('costo', proveedorData.costo);
+    data.append('website', proveedorData.website);
+    data.append('correo', proveedorData.correo);
+
+    axios.post(`${url}/proveedores/newproveedor`, data)
+        .then((response) => {
+            console.log(response);
+            getProveedores();
+        });
 };
 
 const handleDelete = (proveedor) => {
-    axios.post(`${url}/delete/${proveedor.id}`)
+    axios.post(`${url}/proveedores/delete/${proveedor.id}`)
         .then(() => getProveedores());
 };
 
