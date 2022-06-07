@@ -10,15 +10,31 @@ import {
 } from '@headlessui/vue'
 
 import NewProveedorFormVue from './components/NewProveedorForm.vue';
+import NewSuscripcionFormVue from '../Suscripciones/components/NewSuscripcionForm.vue';
 
-const isOpen = ref(false)
+const idProveedor = ref(0);
 
-function closeModal() {
-    isOpen.value = false
+const isOpenProveedor = ref(false);
+
+function closeModalProveedor() {
+    isOpenProveedor.value = false;
 }
-function openModal() {
-    isOpen.value = true
+
+function openModalProveedor() {
+    isOpenProveedor.value = true;
 }
+
+const isOpenSuscripcion = ref(false);
+
+function closeModalSuscripcion() {
+    isOpenSuscripcion.value = false;
+}
+
+function openModalSuscripcion(idProveedorsi) {
+    idProveedor.value = idProveedorsi;
+    isOpenSuscripcion.value = true;
+}
+
 const proveedores = ref([]);
 
 const tableHeader = [
@@ -54,7 +70,7 @@ const handleDelete = (proveedor) => {
         <div className='-my-2 sm:-mx-6 lg:-mx-8'>
             <div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
                 <div class="flex justify-end py-2">
-                    <button type="button" @click="openModal"
+                    <button type="button" @click="openModalProveedor"
                         className='bg-blue-400 hover:bg-blue-700 hover:shadow-lg text-white no-underline py-2 px-4 rounded'>
                         Agregar Proveedor
                     </button>
@@ -107,7 +123,7 @@ const handleDelete = (proveedor) => {
                                     </div>
                                 </td>
                                 <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                                    <button href='#asdf'
+                                    <button @click="openModalSuscripcion(proveedor.id)"
                                         className='bg-orange-400 hover:bg-orange-700 hover:shadow-lg text-white no-underline py-2 px-2 rounded'>
                                         Suscribirse
                                     </button>
@@ -126,8 +142,8 @@ const handleDelete = (proveedor) => {
         </div>
     </div>
 
-    <TransitionRoot appear :show="isOpen" as="template">
-        <Dialog as="div" @close="closeModal" class="relative z-10">
+    <TransitionRoot appear :show="isOpenProveedor" as="template">
+        <Dialog as="div" @close="closeModalProveedor" class="relative z-10">
             <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
                 leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
                 <div class="fixed inset-0 bg-black bg-opacity-25" />
@@ -142,7 +158,33 @@ const handleDelete = (proveedor) => {
                             class="w-full transform overflow-hidden rounded-2xl bg-gray-100 p-6 text-left align-middle shadow-xl transition-all">
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    <NewProveedorFormVue @close="closeModal" @refresh="getProveedores" />
+                                    <NewProveedorFormVue @close="closeModalProveedor" @refresh="getProveedores" />
+                                </p>
+                            </div>
+                        </DialogPanel>
+                    </TransitionChild>
+                </div>
+            </div>
+        </Dialog>
+    </TransitionRoot>
+
+    <TransitionRoot appear :show="isOpenSuscripcion" as="template">
+        <Dialog as="div" @close="closeModalSuscripcion" class="relative z-10">
+            <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
+                leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
+                <div class="fixed inset-0 bg-black bg-opacity-25" />
+            </TransitionChild>
+
+            <div class="fixed inset-0 overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                    <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
+                        enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
+                        leave-to="opacity-0 scale-95">
+                        <DialogPanel
+                            class="w-full transform overflow-hidden rounded-2xl bg-gray-100 p-6 text-left align-middle shadow-xl transition-all">
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    <NewSuscripcionFormVue @close="closeModalSuscripcion" :idProveedor="idProveedor" />
                                 </p>
                             </div>
                         </DialogPanel>

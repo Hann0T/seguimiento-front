@@ -3,31 +3,41 @@ import { reactive } from 'vue';
 import axios from 'axios';
 import { url } from '../../../utils/url';
 
-const emit = defineEmits(['close', 'refresh'])
+import useLocalStorage from '../../../utils/localStorage';
 
-const proveedorDataForm = reactive({
-    nombre: '',
-    nombre_servicio: '',
-    categoria: '',
-    costo: 0,
-    website: '',
-    correo: '',
+const [usuario, saveUsuario] = useLocalStorage('USER', {});
+
+const props = defineProps(['idProveedor']);
+const emit = defineEmits(['close']);
+
+const suscripcionDataForm = reactive({
+    fechaInicio: '',
+    duracion: '',
+    ciclo: '',
+    diasRecordatorio: '',
+    tipoMoneda: '',
+    idProveedor: '',
 });
 
-const handleRegistrarProveedor = () => {
+const handleRegistrarSuscripcion = () => {
     var data = new FormData();
-    data.append('nombre', proveedorDataForm.nombre);
-    data.append('nombre_servicio', proveedorDataForm.nombre_servicio);
-    data.append('categoria', proveedorDataForm.categoria);
-    data.append('costo', proveedorDataForm.costo);
-    data.append('website', proveedorDataForm.website);
-    data.append('correo', proveedorDataForm.correo);
+    data.append('duracion', suscripcionDataForm.duracion);
+    data.append('fechaInicio', suscripcionDataForm.fechaInicio);
+    data.append('tipoMoneda', suscripcionDataForm.tipoMoneda);
+    data.append('ciclo', suscripcionDataForm.ciclo);
+    data.append('diasRecordatorio', suscripcionDataForm.diasRecordatorio);
+    data.append('mes', getMes(suscripcionDataForm.fechaInicio));
+    data.append('proveedor', props.idProveedor);
+    data.append('usuario', usuario.id);
 
-    axios.post(`${url}/proveedores/newproveedor`, data)
-        .then((response) => {
-            emit('refresh');
-            emit('close');
-        });
+    axios.post(`${url}/suscripciones/newsuscripcion`, data).then(() => {
+        emit('close');
+    });
+};
+
+const getMes = (fecha) => {
+    let date = new Date(fecha);
+    return date.getMonth() + 1;
 };
 </script>
 
@@ -36,7 +46,9 @@ const handleRegistrarProveedor = () => {
         <div class="md:grid md:grid-cols-3 md:gap-6">
             <div class="md:col-span-1">
                 <div class="px-4 sm:px-0">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Crear nuevo proveedor</h3>
+                    <h3 class="text-lg font-medium leading-6 text-gray-900">
+                        Suscribirse
+                    </h3>
                 </div>
             </div>
             <div class="mt-5 md:mt-0 md:col-span-2">
@@ -44,66 +56,63 @@ const handleRegistrarProveedor = () => {
                     <div class="px-4 py-5 bg-white sm:p-6">
                         <div class="grid grid-cols-6 gap-6">
                             <div class="col-span-6 sm:col-span-3">
-                                <label for="nombre" class="block text-sm font-medium text-gray-700">
-                                    Nombre</label>
-                                <input type="text" name="nombre" id="nombre"
+                                <label for="fechaInicio" class="block text-sm font-medium text-gray-700">
+                                    Fecha de Inicio</label>
+                                <input type="date" name="fechaInicio" id="fechaInicio"
                                     class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    v-model="proveedorDataForm.nombre" />
+                                    v-model="suscripcionDataForm.fechaInicio" />
                             </div>
 
                             <div class="col-span-6 sm:col-span-3">
-                                <label for="nombre_servicio" class="block text-sm font-medium text-gray-700">
-                                    Nombre del Servicio</label>
-                                <input type="text" name="nombre_servicio" id="nombre_servicio"
+                                <label for="duracion" class="block text-sm font-medium text-gray-700">
+                                    Duracion de la Suscripcion</label>
+                                <input type="text" name="duracion" id="duracion"
                                     class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    v-model="proveedorDataForm.nombre_servicio" />
+                                    v-model="suscripcionDataForm.duracion" />
                             </div>
 
                             <div class="col-span-6 sm:col-span-3">
-                                <label for="categoria" class="block text-sm font-medium text-gray-700">
-                                    Categoria
+                                <label for="ciclo" class="block text-sm font-medium text-gray-700">
+                                    Ciclo de pago
                                 </label>
-                                <select id="categoria" name="categoria"
+                                <select id="ciclo" name="ciclo"
                                     class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    v-model="proveedorDataForm.categoria">
-                                    <option>Entretenimiento</option>
-                                    <option>Productividad</option>
-                                    <option>Mexico</option>
+                                    v-model="suscripcionDataForm.ciclo">
+                                    <option disabled value="">Selecciona uno</option>
+                                    <option>Semanal</option>
+                                    <option>Mensual</option>
+                                    <option>Anual</option>
                                 </select>
                             </div>
 
                             <div class="col-span-6 sm:col-span-3">
-                                <label for="website" class="block text-sm font-medium text-gray-700">
-                                    Website
+                                <label for="diasRecordatorio" class="block text-sm font-medium text-gray-700">
+                                    Dias Recordatorio
                                 </label>
-                                <div class="mt-1 flex rounded-md border shadow-sm">
-                                    <span
-                                        class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                                        http:// </span>
-                                    <input type="text" name="website" id="website"
-                                        class="focus:ring-indigo-500 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                                        placeholder="www.example.com" v-model="proveedorDataForm.website" />
-                                </div>
+                                <select id="diasRecordatorio" name="diasRecordatorio"
+                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    v-model="suscripcionDataForm.diasRecordatorio">
+                                    <option disabled value="">Selecciona uno</option>
+                                    <option>5 dias</option>
+                                    <option>10 dias</option>
+                                    <option>20 dias</option>
+                                    <option>30 dias</option>
+                                </select>
                             </div>
 
                             <div class="col-span-6 sm:col-span-3">
-                                <label for="costo" class="block text-sm font-medium text-gray-700">
-                                    Costo
+                                <label for="tipoMoneda" class="block text-sm font-medium text-gray-700">
+                                    Tipo Moneda
                                 </label>
-                                <input type="number" name="costo" id="costo"
-                                    class="focus:ring-indigo-500 py-2 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded sm:text-sm border-gray-300"
-                                    v-model="proveedorDataForm.costo" />
+                                <select id="tipoMoneda" name="tipoMoneda"
+                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    v-model="suscripcionDataForm.tipoMoneda">
+                                    <option disabled value="">Selecciona uno</option>
+                                    <option>Soles</option>
+                                    <option>Dolares</option>
+                                    <option>Euros</option>
+                                </select>
                             </div>
-
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="correo" class="block text-sm font-medium text-gray-700">
-                                    Correo
-                                </label>
-                                <input type="email" name="correo" id="correo"
-                                    class="focus:ring-indigo-500 py-2 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded sm:text-sm border-gray-300"
-                                    placeholder="example@email.com" v-model="proveedorDataForm.correo" />
-                            </div>
-
                         </div>
                     </div>
                     <div class="flex justify-end w-full bg-gray-50">
@@ -115,7 +124,7 @@ const handleRegistrarProveedor = () => {
                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                             <button type="submit"
                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                @click="handleRegistrarProveedor">Save</button>
+                                @click="handleRegistrarSuscripcion">Save</button>
                         </div>
                     </div>
                 </div>

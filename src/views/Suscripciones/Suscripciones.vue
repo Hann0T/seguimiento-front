@@ -9,15 +9,6 @@ const [usuario, saveUsuario] = useLocalStorage('USER', {});
 
 const suscripciones = ref([]);
 
-const suscripcionDataForm = reactive({
-    fechaInicio: '',
-    duracion: '',
-    ciclo: '',
-    diasRecordatorio: '',
-    tipoMoneda: '',
-    Proveedor: '',
-});
-
 onMounted(() => {
     getSuscripciones();
 });
@@ -27,19 +18,6 @@ const getSuscripciones = () => {
         .then(response => suscripciones.value = response.data);
 };
 
-const handleRegistrarSuscripcion = () => {
-    var data = new FormData();
-    data.append('duracion', suscripcionDataForm.duracion);
-    data.append('fechaInicio', suscripcionDataForm.fechaInicio);
-    data.append('tipoMoneda', suscripcionDataForm.tipoMoneda);
-    data.append('ciclo', suscripcionDataForm.ciclo);
-    data.append('diasRecordatorio', suscripcionDataForm.diasRecordatorio);
-    data.append('idProveedor', suscripcionDataForm.idProveedor);
-
-    axios.post(`${url}/suscripciones/newsuscripcion`, data).then(() => {
-        getSuscripciones();
-    });
-};
 
 const handleDelete = (suscripcion) => {
     axios.post(`${url}/suscripciones/delete/${suscripcion.id}`)

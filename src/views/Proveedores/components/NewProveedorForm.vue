@@ -66,6 +66,7 @@ const handleRegistrarProveedor = () => {
                                 <select id="categoria" name="categoria"
                                     class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     v-model="proveedorDataForm.categoria">
+                                    <option disabled value="">Selecciona uno</option>
                                     <option>Entretenimiento</option>
                                     <option>Productividad</option>
                                     <option>Mexico</option>
