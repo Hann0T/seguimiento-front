@@ -9,8 +9,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from './App.vue'
 import HomeVue from './views/Home.vue';
 import LoginVue from './views/Login.vue';
-import ProveedoresVue from './views/Proveedores.vue';
-import SuscripcionesVue from './views/Suscripciones.vue';
+import ProveedoresVue from './views/Proveedores/Proveedores.vue';
+import SuscripcionesVue from './views/Suscripciones/Suscripciones.vue';
 import UsuariosVue from './views/Usuarios.vue';
 import NotFoundVue from './views/NotFound.vue';
 
