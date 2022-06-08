@@ -1,9 +1,9 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import axios from 'axios';
 import { url } from '../../../utils/url';
-
 import useLocalStorage from '../../../utils/localStorage';
+import DialogModalError from '../../../components/DialogModalError.vue';
 
 const [usuario, saveUsuario] = useLocalStorage('USER', {});
 
@@ -19,11 +19,19 @@ const suscripcionDataForm = reactive({
     idProveedor: '',
 });
 
+const monedaSelected = ref('s/.');
+
+const monedas = ref([
+    { text: 'Soles', value: 's/.' },
+    { text: 'Dolares', value: '$' },
+    { text: 'Euros', value: '€' },
+]);
+
 const handleRegistrarSuscripcion = () => {
     var data = new FormData();
     data.append('duracion', suscripcionDataForm.duracion);
     data.append('fechaInicio', suscripcionDataForm.fechaInicio);
-    data.append('tipoMoneda', suscripcionDataForm.tipoMoneda);
+    data.append('tipoMoneda', monedaSelected.value);
     data.append('ciclo', suscripcionDataForm.ciclo);
     data.append('diasRecordatorio', suscripcionDataForm.diasRecordatorio);
     data.append('mes', getMes(suscripcionDataForm.fechaInicio));
@@ -32,12 +40,31 @@ const handleRegistrarSuscripcion = () => {
 
     axios.post(`${url}/suscripciones/newsuscripcion`, data).then(() => {
         emit('close');
+    }).catch(err => {
+        errMessage.title = "Error al registrar nueva suscripcion";
+        errMessage.message = err.message;
+        openDialog();
     });
 };
 
 const getMes = (fecha) => {
     let date = new Date(fecha);
     return date.getMonth() + 1;
+};
+
+let errMessage = reactive({
+    title: '',
+    message: ''
+});
+
+const dialogIsOpen = ref(false);
+
+const openDialog = () => {
+    dialogIsOpen.value = true;
+};
+
+const closeDialog = () => {
+    dialogIsOpen.value = false;
 };
 </script>
 
@@ -108,9 +135,9 @@ const getMes = (fecha) => {
                                     class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     v-model="suscripcionDataForm.tipoMoneda">
                                     <option disabled value="">Selecciona uno</option>
-                                    <option>Soles</option>
-                                    <option>Dolares</option>
-                                    <option>Euros</option>
+                                    <option v-for="moneda in monedas" :key="moneda.value" :value="moneda.value">
+                                        {{ moneda.text }}
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -131,4 +158,7 @@ const getMes = (fecha) => {
             </div>
         </div>
     </div>
+
+    <DialogModalError :isOpen="dialogIsOpen" @close="closeDialog" :title="errMessage.title"
+        :message="errMessage.message" />
 </template>

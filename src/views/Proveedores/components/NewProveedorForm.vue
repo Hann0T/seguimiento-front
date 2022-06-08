@@ -1,7 +1,8 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import axios from 'axios';
 import { url } from '../../../utils/url';
+import DialogModalError from '../../../components/DialogModalError.vue';
 
 const emit = defineEmits(['close', 'refresh'])
 
@@ -24,10 +25,29 @@ const handleRegistrarProveedor = () => {
     data.append('correo', proveedorDataForm.correo);
 
     axios.post(`${url}/proveedores/newproveedor`, data)
-        .then((response) => {
+        .then(() => {
             emit('refresh');
             emit('close');
+        }).catch(err => {
+            errMessage.title = "Error al registrar nuevo proveedor";
+            errMessage.message = err.message;
+            openDialog();
         });
+};
+
+let errMessage = reactive({
+    title: '',
+    message: ''
+});
+
+const dialogIsOpen = ref(false);
+
+const openDialog = () => {
+    dialogIsOpen.value = true;
+};
+
+const closeDialog = () => {
+    dialogIsOpen.value = false;
 };
 </script>
 
@@ -69,7 +89,9 @@ const handleRegistrarProveedor = () => {
                                     <option disabled value="">Selecciona uno</option>
                                     <option>Entretenimiento</option>
                                     <option>Productividad</option>
-                                    <option>Mexico</option>
+                                    <option>Películas y Series</option>
+                                    <option>Música</option>
+                                    <option>Noticias</option>
                                 </select>
                             </div>
 
@@ -109,12 +131,12 @@ const handleRegistrarProveedor = () => {
                     </div>
                     <div class="flex justify-end w-full bg-gray-50">
                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <button type="submit"
+                            <button type="button"
                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 @click="$emit('close')">cancel</button>
                         </div>
                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <button type="submit"
+                            <button type="button"
                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 @click="handleRegistrarProveedor">Save</button>
                         </div>
@@ -123,4 +145,7 @@ const handleRegistrarProveedor = () => {
             </div>
         </div>
     </div>
+
+    <DialogModalError :isOpen="dialogIsOpen" @close="closeDialog" :title="errMessage.title"
+        :message="errMessage.message" />
 </template>

@@ -11,15 +11,21 @@ import HomeVue from './views/Home.vue';
 import LoginVue from './views/Login.vue';
 import ProveedoresVue from './views/Proveedores/Proveedores.vue';
 import SuscripcionesVue from './views/Suscripciones/Suscripciones.vue';
-import UsuariosVue from './views/Usuarios.vue';
+import finanzasVue from './views/Finanzas.vue';
 import NotFoundVue from './views/NotFound.vue';
+import UserInfoVue from './views/UserInfo.vue';
+import UsersVue from './views/Users.vue';
+import RegisterVue from './views/Register.vue';
 
 const routes = [
   { path: '/', component: HomeVue, name: 'Home' },
   { path: '/login', component: LoginVue, name: 'Login' },
+  { path: '/registro', component: RegisterVue, name: 'Register' },
   { path: '/proveedores', component: ProveedoresVue, name: 'Proveedores' },
   { path: '/suscripciones', component: SuscripcionesVue, name: 'Suscripciones' },
-  { path: '/usuarios', component: UsuariosVue, name: 'Usuarios' },
+  { path: '/finanzas', component: finanzasVue, name: 'Finanzas' },
+  { path: '/user-info', component: UserInfoVue, name: 'UserInfo' },
+  { path: '/usuarios', component: UsersVue, name: 'Usuarios' },
   { path: '/:pathMatch(.*)*', component: NotFoundVue }
 ];
 

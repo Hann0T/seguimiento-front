@@ -1,9 +1,10 @@
 <script setup>
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import axios from 'axios';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import useLocalStorage from '../utils/localStorage';
 import { url } from '../utils/url';
+import DialogModalError from '../components/DialogModalError.vue';
 
 let [item, saveItem] = useLocalStorage('USER', {});
 
@@ -20,12 +21,32 @@ const handleLogin = () => {
     axios.post(`${url}/login`, data)
         .then((response) => {
             saveItem(response.data);
-        }).catch(err => console.error(err));
+            window.location.href = '/';
+        }).catch(err => {
+            errMessage.title = "Error al Logearse";
+            errMessage.message = err.message;
+            openDialog();
+        });
 };
 
 onMounted(() => {
     saveItem({});
 });
+
+let errMessage = reactive({
+    title: '',
+    message: ''
+});
+
+const dialogIsOpen = ref(false);
+
+const openDialog = () => {
+    dialogIsOpen.value = true;
+};
+
+const closeDialog = () => {
+    dialogIsOpen.value = false;
+};
 
 </script>
 
@@ -62,10 +83,16 @@ onMounted(() => {
                             <LockClosedIcon class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
                                 aria-hidden="true" />
                         </span>
-                        Sign in
+                        Iniciar sesión
                     </button>
+                    <div class="w-full flex justify-center mt-2">
+                        <a href="/registro" class="text-indigo-700 no-underline text-center hover:underline cursor">o
+                            registrate</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <DialogModalError :isOpen="dialogIsOpen" @close="closeDialog" :title="errMessage.title"
+        :message="errMessage.message" />
 </template>
