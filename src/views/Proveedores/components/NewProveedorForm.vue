@@ -60,88 +60,90 @@ const closeDialog = () => {
                 </div>
             </div>
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <div class="shadow overflow-hidden sm:rounded-md">
-                    <div class="px-4 py-5 bg-white sm:p-6">
-                        <div class="grid grid-cols-6 gap-6">
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="nombre" class="block text-sm font-medium text-gray-700">
-                                    Nombre</label>
-                                <input type="text" name="nombre" id="nombre"
-                                    class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    v-model="proveedorDataForm.nombre" />
-                            </div>
-
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="nombre_servicio" class="block text-sm font-medium text-gray-700">
-                                    Nombre del Servicio</label>
-                                <input type="text" name="nombre_servicio" id="nombre_servicio"
-                                    class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    v-model="proveedorDataForm.nombre_servicio" />
-                            </div>
-
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="categoria" class="block text-sm font-medium text-gray-700">
-                                    Categoria
-                                </label>
-                                <select id="categoria" name="categoria"
-                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    v-model="proveedorDataForm.categoria">
-                                    <option disabled value="">Selecciona uno</option>
-                                    <option>Entretenimiento</option>
-                                    <option>Productividad</option>
-                                    <option>Películas y Series</option>
-                                    <option>Música</option>
-                                    <option>Noticias</option>
-                                </select>
-                            </div>
-
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="website" class="block text-sm font-medium text-gray-700">
-                                    Website
-                                </label>
-                                <div class="mt-1 flex rounded-md border shadow-sm">
-                                    <span
-                                        class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                                        http:// </span>
-                                    <input type="text" name="website" id="website"
-                                        class="focus:ring-indigo-500 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                                        placeholder="www.example.com" v-model="proveedorDataForm.website" />
+                <form @submit.prevent="handleRegistrarProveedor">
+                    <div class="shadow overflow-hidden sm:rounded-md">
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="grid grid-cols-6 gap-6">
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="nombre" class="block text-sm font-medium text-gray-700">
+                                        Nombre</label>
+                                    <input type="text" name="nombre" id="nombre"
+                                        class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="proveedorDataForm.nombre" required />
                                 </div>
-                            </div>
 
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="costo" class="block text-sm font-medium text-gray-700">
-                                    Costo
-                                </label>
-                                <input type="number" name="costo" id="costo"
-                                    class="focus:ring-indigo-500 py-2 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded sm:text-sm border-gray-300"
-                                    v-model="proveedorDataForm.costo" />
-                            </div>
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="nombre_servicio" class="block text-sm font-medium text-gray-700">
+                                        Nombre del Servicio</label>
+                                    <input type="text" name="nombre_servicio" id="nombre_servicio"
+                                        class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="proveedorDataForm.nombre_servicio" required />
+                                </div>
 
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="correo" class="block text-sm font-medium text-gray-700">
-                                    Correo
-                                </label>
-                                <input type="email" name="correo" id="correo"
-                                    class="focus:ring-indigo-500 py-2 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded sm:text-sm border-gray-300"
-                                    placeholder="example@email.com" v-model="proveedorDataForm.correo" />
-                            </div>
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="categoria" class="block text-sm font-medium text-gray-700">
+                                        Categoria
+                                    </label>
+                                    <select id="categoria" name="categoria"
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="proveedorDataForm.categoria" required>
+                                        <option disabled value="">Selecciona uno</option>
+                                        <option>Entretenimiento</option>
+                                        <option>Productividad</option>
+                                        <option>Películas y Series</option>
+                                        <option>Música</option>
+                                        <option>Noticias</option>
+                                    </select>
+                                </div>
 
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="website" class="block text-sm font-medium text-gray-700">
+                                        Website
+                                    </label>
+                                    <div class="mt-1 flex rounded-md border shadow-sm">
+                                        <span
+                                            class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                                            http:// </span>
+                                        <input type="text" name="website" id="website"
+                                            class="focus:ring-indigo-500 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                            placeholder="www.example.com" v-model="proveedorDataForm.website"
+                                            required />
+                                    </div>
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="costo" class="block text-sm font-medium text-gray-700">
+                                        Costo
+                                    </label>
+                                    <input type="number" name="costo" id="costo"
+                                        class="focus:ring-indigo-500 py-2 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded sm:text-sm border-gray-300"
+                                        v-model="proveedorDataForm.costo" required />
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="correo" class="block text-sm font-medium text-gray-700">
+                                        Correo
+                                    </label>
+                                    <input type="email" name="correo" id="correo"
+                                        class="focus:ring-indigo-500 py-2 pl-2 focus:border-indigo-500 border flex-1 block w-full rounded sm:text-sm border-gray-300"
+                                        placeholder="example@email.com" v-model="proveedorDataForm.correo" required />
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="flex justify-end w-full bg-gray-50">
+                            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                <button type="button"
+                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    @click="$emit('close')">cancel</button>
+                            </div>
+                            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                <button type="submit"
+                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex justify-end w-full bg-gray-50">
-                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <button type="button"
-                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                @click="$emit('close')">cancel</button>
-                        </div>
-                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <button type="button"
-                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                @click="handleRegistrarProveedor">Save</button>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

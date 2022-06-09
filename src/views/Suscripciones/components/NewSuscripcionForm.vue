@@ -19,7 +19,7 @@ const suscripcionDataForm = reactive({
     idProveedor: '',
 });
 
-const monedaSelected = ref('s/.');
+const monedaSelected = ref('');
 
 const monedas = ref([
     { text: 'Soles', value: 's/.' },
@@ -79,82 +79,91 @@ const closeDialog = () => {
                 </div>
             </div>
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <div class="shadow overflow-hidden sm:rounded-md">
-                    <div class="px-4 py-5 bg-white sm:p-6">
-                        <div class="grid grid-cols-6 gap-6">
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="fechaInicio" class="block text-sm font-medium text-gray-700">
-                                    Fecha de Inicio</label>
-                                <input type="date" name="fechaInicio" id="fechaInicio"
-                                    class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    v-model="suscripcionDataForm.fechaInicio" />
-                            </div>
+                <form @submit.prevent="handleRegistrarSuscripcion">
+                    <div class="shadow overflow-hidden sm:rounded-md">
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="grid grid-cols-6 gap-6">
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="fechaInicio" class="block text-sm font-medium text-gray-700">
+                                        Fecha de Inicio</label>
+                                    <input type="date" name="fechaInicio" id="fechaInicio"
+                                        class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        v-model="suscripcionDataForm.fechaInicio" required />
+                                </div>
 
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="duracion" class="block text-sm font-medium text-gray-700">
-                                    Duracion de la Suscripcion</label>
-                                <input type="text" name="duracion" id="duracion"
-                                    class="mt-1 py-2 pl-2 focus:ring-indigo-500 border focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    v-model="suscripcionDataForm.duracion" />
-                            </div>
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="duracion" class="block text-sm font-medium text-gray-700">
+                                        Duracion de la Suscripcion</label>
+                                    <select id="duracion" name="duracion"
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="suscripcionDataForm.duracion" required>
+                                        <option disabled value="">Selecciona uno</option>
+                                        <option>1 mes</option>
+                                        <option>3 meses</option>
+                                        <option>6 meses</option>
+                                        <option>12 meses</option>
+                                        <option>18 meses</option>
+                                        <option>24 meses</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="ciclo" class="block text-sm font-medium text-gray-700">
-                                    Ciclo de pago
-                                </label>
-                                <select id="ciclo" name="ciclo"
-                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    v-model="suscripcionDataForm.ciclo">
-                                    <option disabled value="">Selecciona uno</option>
-                                    <option>Semanal</option>
-                                    <option>Mensual</option>
-                                    <option>Anual</option>
-                                </select>
-                            </div>
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="ciclo" class="block text-sm font-medium text-gray-700">
+                                        Ciclo de pago
+                                    </label>
+                                    <select id="ciclo" name="ciclo"
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="suscripcionDataForm.ciclo" required>
+                                        <option disabled value="">Selecciona uno</option>
+                                        <option>Semanal</option>
+                                        <option>Mensual</option>
+                                        <option>Anual</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="diasRecordatorio" class="block text-sm font-medium text-gray-700">
-                                    Dias Recordatorio
-                                </label>
-                                <select id="diasRecordatorio" name="diasRecordatorio"
-                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    v-model="suscripcionDataForm.diasRecordatorio">
-                                    <option disabled value="">Selecciona uno</option>
-                                    <option>5 dias</option>
-                                    <option>10 dias</option>
-                                    <option>20 dias</option>
-                                    <option>30 dias</option>
-                                </select>
-                            </div>
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="diasRecordatorio" class="block text-sm font-medium text-gray-700">
+                                        Dias Recordatorio
+                                    </label>
+                                    <select id="diasRecordatorio" name="diasRecordatorio"
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="suscripcionDataForm.diasRecordatorio" required>
+                                        <option disabled value="">Selecciona uno</option>
+                                        <option>5 dias</option>
+                                        <option>10 dias</option>
+                                        <option>20 dias</option>
+                                        <option>30 dias</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-span-6 sm:col-span-3">
-                                <label for="tipoMoneda" class="block text-sm font-medium text-gray-700">
-                                    Tipo Moneda
-                                </label>
-                                <select id="tipoMoneda" name="tipoMoneda"
-                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    v-model="suscripcionDataForm.tipoMoneda">
-                                    <option disabled value="">Selecciona uno</option>
-                                    <option v-for="moneda in monedas" :key="moneda.value" :value="moneda.value">
-                                        {{ moneda.text }}
-                                    </option>
-                                </select>
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="tipoMoneda" class="block text-sm font-medium text-gray-700">
+                                        Tipo Moneda
+                                    </label>
+                                    <select id="tipoMoneda" name="tipoMoneda"
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        v-model="monedaSelected" required>
+                                        <option disabled value="">Selecciona uno</option>
+                                        <option v-for="moneda in monedas" :key="moneda.value" :value="moneda.value">
+                                            {{ moneda.text }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end w-full bg-gray-50">
+                            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                <button type="submit"
+                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    @click="$emit('close')">cancel</button>
+                            </div>
+                            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                <button type="submit"
+                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-end w-full bg-gray-50">
-                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <button type="submit"
-                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                @click="$emit('close')">cancel</button>
-                        </div>
-                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <button type="submit"
-                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                @click="handleRegistrarSuscripcion">Save</button>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

@@ -53,7 +53,6 @@ const tableHeader = [
     'Categoria',
     'Precio Mensual',
     'Correo',
-    'Suscribirse',
 ];
 
 onMounted(() => {
@@ -92,6 +91,10 @@ const handleDelete = (id) => {
                                 <th v-for="header in tableHeader" scope='col'
                                     className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                                     {{ header }}
+                                </th>
+                                <th v-if="usuario.rol !== 'admin'" scope='col'
+                                    className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                                    Suscribirse
                                 </th>
                                 <th v-if="usuario.rol === 'admin'" scope='col'
                                     className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
@@ -134,7 +137,8 @@ const handleDelete = (id) => {
                                         {{ proveedor.correo }}
                                     </div>
                                 </td>
-                                <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                                <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'
+                                    v-if="usuario.rol !== 'admin'">
                                     <button @click="openModalSuscripcion(proveedor.id)"
                                         className='bg-orange-400 hover:bg-orange-700 hover:shadow-lg text-white no-underline py-2 px-2 rounded'>
                                         Suscribirse

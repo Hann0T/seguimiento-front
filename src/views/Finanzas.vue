@@ -48,13 +48,50 @@ const precio = (suscripcion) => {
     return suscripcion.tipoMoneda + suscripcion.proveedor.costo;
 }
 
+const pagarEnSoles = () => {
+    let total = 0;
+    suscripciones.value.forEach((sus) => {
+        if (sus.tipoMoneda === 's/.') {
+            total += sus.proveedor.costo;
+        }
+    });
+
+    return total;
+}
+
+const pagarEnDolares = () => {
+    let total = 0;
+    suscripciones.value.forEach((sus) => {
+        if (sus.tipoMoneda === '$') {
+            total += sus.proveedor.costo;
+        }
+    });
+
+    return total;
+}
+
+const pagarEnEuros = () => {
+    let total = 0;
+    suscripciones.value.forEach((sus) => {
+        if (sus.tipoMoneda === '€') {
+            total += sus.proveedor.costo;
+        }
+    });
+
+    return total;
+}
+
+const printReport = () => {
+    window.print();
+}
+
 const tableHeader = [
     "Proveedor",
+    "soporte",
     "Fecha De Facturacion",
     "Duración",
     "Precio",
     "Ciclo",
-    "Eliminar",
 ];
 </script>
 
@@ -74,11 +111,19 @@ const tableHeader = [
                             <option v-for="mes in meses" :key="mes.value" :value="mes.value">{{ mes.text }}</option>
                         </select>
                     </div>
-                    <button type="button"
-                        className='bg-blue-400 hover:bg-blue-700 hover:shadow-lg text-white no-underline py-2 px-4 rounded'
-                        @click="searchSuscripciones">
-                        Buscar
-                    </button>
+                    <div class="h-full">
+                        <button v-if="hasSuscripciones" type="button"
+                            className='bg-blue-400 hover:bg-blue-700 hover:shadow-lg text-white no-underline py-3 px-4 rounded mr-2'
+                            @click="printReport">
+                            Imprimir Reporte
+                        </button>
+                        <button type="button"
+                            className='bg-blue-400 hover:bg-blue-700 hover:shadow-lg text-white no-underline py-3 px-4 rounded'
+                            @click="searchSuscripciones">
+                            Buscar
+                        </button>
+
+                    </div>
                 </div>
                 <div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
                 </div>
@@ -109,6 +154,11 @@ const tableHeader = [
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-gray-900">
+                                            {{ suscripcion.proveedor.correo }}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-900">
                                             {{ fechaFacturacion(suscripcion) }}
                                         </div>
                                     </td>
@@ -127,21 +177,27 @@ const tableHeader = [
                                             {{ suscripcion.diasRecordatorio }}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button @click="handleDelete(suscripcion)"
-                                            className="bg-red-400 hover:bg-red-700 hover:shadow-lg text-white no-underline py-2 px-4 rounded">
-                                            Eliminar
-                                        </button>
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-5 flex flex-col items-end mr-5">
+                        <p class="mr-24">
+                            Total A Pagar:
+                        </p>
+                        <div>
+                            <p><strong>s/.:</strong> {{ pagarEnSoles() }}</p>
+                            <p><strong>$:</strong> {{ pagarEnDolares() }}</p>
+                            <p><strong>€:</strong> {{ pagarEnEuros() }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div v-else>
-        No hay suscripciones
+        <p class="text-3xl text-center mt-5 font-bold text-indigo-700">
+            No hay suscripciones
+        </p>
     </div>
 </template>

@@ -25,10 +25,13 @@ const getUsuarios = () => {
 };
 
 const gravatar = (usuario) => {
-    // console.log("sdf" + usuario.correo);
     const hash = md5(usuario.correo?.trim().toLowerCase());
     return `https://www.gravatar.com/avatar/${hash}`;
 };
+
+const printReport = () => {
+    window.print();
+}
 
 const tableHeader = [
     "Foto",
@@ -45,7 +48,13 @@ const tableHeader = [
     <div className="flex flex-col">
         <div className="-my-2 sm:-mx-6 lg:-mx-8">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div class="flex justify-end py-2"></div>
+                <div class="flex justify-end py-2">
+                    <button type="button"
+                        className='bg-blue-400 hover:bg-blue-700 hover:shadow-lg text-white no-underline py-3 px-4 rounded mr-2'
+                        @click="printReport">
+                        Imprimir Reporte
+                    </button>
+                </div>
                 <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
@@ -64,7 +73,7 @@ const tableHeader = [
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">
+                                    <div v-if="usuario?.correo" className="text-sm text-gray-900">
                                         <img class="h-8 w-8 rounded-full" :src="gravatar(usuario)" alt="usuario.id" />
                                     </div>
                                 </td>
